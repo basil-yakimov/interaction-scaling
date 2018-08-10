@@ -2,52 +2,51 @@ library(vegan)
 
 load("clean data/int.sc.2018.rda")
 
-rts <- decostand(rts, method = "hellinger")
-rh <- decostand(rh, method = "hellinger")
-# restrict analysis to ground beetles (Carabidae)
-rb <- decostand(rb[, 1:22], method = "hellinger")
+cts <- decostand(cts, method = "hellinger")
+ch <- decostand(ch, method = "hellinger")
+cb <- decostand(cb, method = "hellinger")
 
 #------------------------------------------#
 
 # 1st preliminary step. rda for selection of tree and shrub species into parsimonious model
 
-rts.rda <- rda(rb ~ ., rts)
+cts.rda <- rda(cb ~ ., cts)
 
-RsquareAdj(rts.rda)$adj.r.squared
+RsquareAdj(cts.rda)$adj.r.squared
 
-sf <- ordistep(rda(rb ~ 1, data = rts), scope = formula(rts.rda), 
+sf <- ordistep(rda(cb ~ 1, data = cts), scope = formula(cts.rda), 
                direction = "forward", pstep = 5000, trace = 0)
 
-rts.pars <- rts[, attr(sf$terminfo$terms, "term.labels")]
+cts.pars <- cts[, attr(sf$terminfo$terms, "term.labels")]
 
-rts.rda.pars <- rda(rb ~ ., rts.pars)
+cts.rda.pars <- rda(cb ~ ., cts.pars)
 
-RsquareAdj(rts.rda.pars)$adj.r.squared
-anova(rts.rda.pars, step = 1000)
+RsquareAdj(cts.rda.pars)$adj.r.squared
+anova(cts.rda.pars, step = 1000)
 
 #------------------------------------------#
 
 # 2nd preliminary step. rda for selection of herb species into parsimonious model
 
-rh.rda <- rda(rb ~ ., rh)
+ch.rda <- rda(cb ~ ., ch)
 
-RsquareAdj(rh.rda)$adj.r.squared
+RsquareAdj(ch.rda)$adj.r.squared
 
-sf <- ordistep(rda(rb ~ 1, data = rh), scope = formula(rh.rda), 
+sf <- ordistep(rda(cb ~ 1, data = ch), scope = formula(ch.rda), 
                direction = "forward", pstep = 1000, trace = 0)
 
-rh.pars <- rh[, attr(sf$terminfo$terms, "term.labels")]
+ch.pars <- ch[, attr(sf$terminfo$terms, "term.labels")]
 
-rh.rda.pars <- rda(rb ~ ., rh.pars)
+ch.rda.pars <- rda(cb ~ ., ch.pars)
 
-RsquareAdj(rh.rda.pars)$adj.r.squared
-anova(rh.rda.pars, step = 1000)
+RsquareAdj(ch.rda.pars)$adj.r.squared
+anova(ch.rda.pars, step = 1000)
 
 #------------------------------------------#
 
 # 3rd preliminary step. construction and selection of spatial variables
 
-transect <- seq(1:100)
+transect <- seq(1:96)
 transect.d1 <- dist(transect)
 # truncation distance set to 1
 thresh <- 1
@@ -64,16 +63,16 @@ pcnm <- data.frame(transect.pcnm)
 
 #------------------------------------------#
 
-pcnm.rda <- rda(rb ~ ., data = pcnm)
+pcnm.rda <- rda(cb ~ ., data = pcnm)
 
 RsquareAdj(pcnm.rda)$adj.r.squared
 
-sf <- ordiR2step(rda(rb ~ 1, data = pcnm), scope = formula(pcnm.rda), 
+sf <- ordiR2step(rda(cb ~ 1, data = pcnm), scope = formula(pcnm.rda), 
                  direction = "forward", pstep = 1000, trace = 0)
 
 pcnm.pars <- pcnm[,attr(sf$terminfo$terms, "term.labels")]
 
-pcnm.rda.pars <- rda(rb ~ ., pcnm.pars)
+pcnm.rda.pars <- rda(cb ~ ., pcnm.pars)
 
 RsquareAdj(pcnm.rda.pars)$adj.r.squared
 anova(pcnm.rda.pars, step = 1000)
@@ -82,25 +81,25 @@ anova(pcnm.rda.pars, step = 1000)
 
 # Final analysis. Variance partition
 
-part <- varpart(rb, rts.pars, rh.pars, pcnm.pars)
+part <- varpart(cb, cts.pars, ch.pars, pcnm.pars)
 
 plot(part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
 
-png("figs/Fig1a.png", width = 600, height = 600)
+png("figs/Fig1b.png", width = 600, height = 600)
 par(mar = c(.5,.5,.5,.5))
 plot(part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"), id.size = 2)
 dev.off()
 
-# Testing individual fractions of variance (all fraction are significant)
+# Testing individual fractions of variance (tree fraction insignificant)
 
-rts.result <- rda(rb ~ as.matrix(rts.pars) + Condition(as.matrix(rh.pars)) +
+cts.result <- rda(cb ~ as.matrix(cts.pars) + Condition(as.matrix(ch.pars)) +
                    Condition(as.matrix(pcnm.pars)))
-anova(rts.result, step=200, perm.max=200)
+anova(cts.result, step=200, perm.max=200)
 
-rh.result <- rda(rb ~ as.matrix(rh.pars) + Condition(as.matrix(rts.pars)) +
+ch.result <- rda(cb ~ as.matrix(ch.pars) + Condition(as.matrix(cts.pars)) +
                    Condition(as.matrix(pcnm.pars)))
-anova(rh.result, step=200, perm.max=200)
+anova(ch.result, step=200, perm.max=200)
 
-pcnm.result <- rda(rb ~ as.matrix(pcnm.pars) + Condition(as.matrix(rts.pars)) +
-                     Condition(as.matrix(rh.pars)))
+pcnm.result <- rda(cb ~ as.matrix(pcnm.pars) + Condition(as.matrix(cts.pars)) +
+                     Condition(as.matrix(ch.pars)))
 anova(pcnm.result, step=200, perm.max=200)
