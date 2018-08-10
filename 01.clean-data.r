@@ -37,18 +37,85 @@ for (ii in 1:length(r.ts.list))
 
 colnames(rts) <- r.ts.list
 
+rts <- data.frame(rts)
+rh <- data.frame(rh)
+
 rm(rt, rs, r.herb.list, r.tree.list, r.shrub.list, r.ts.list)
 
 #---#
 
+# load data matrix, b is for beetles
 rb <- t(read_excel("raw data/Материал_ловушки_2.xlsx", sheet = 1, range = "C8:CX59", col_names = F))
 rb[is.na(rb)] <- 0
 
+# load taxon list
 r.beetle.list <- read_excel("raw data/Материал_ловушки_2.xlsx", sheet = 1, range = "B8:B59", col_names = F)[[1]]
 colnames(rb) <- r.beetle.list
 
+# remove composite taxons
 rb <- rb[, colSums(rb) > 0]
+
+rb <- data.frame(rb)
 
 rm(r.beetle.list)
 
+#--------------------------------------Chinese mount DongLin data----------------------------------------------#
+
+# load mountain forest data
+# c is for chinese mountain forest, tsh stands for tree, shrub and herb layers respectively
+ct <- t(read_excel("raw data/Forest_data.xlsx", sheet = 4, range = "B2:CS21", col_names = F))
+cs <- t(read_excel("raw data/Forest_data.xlsx", sheet = 5, range = "B2:CS42", col_names = F))
+ch <- t(read_excel("raw data/Forest_data.xlsx", sheet = 6, range = "B2:CS194", col_names = F))
+
+# loading and assigning latin to columns
+c.tree.list <- read_excel("raw data/Forest_data.xlsx", sheet = 4, range = "A2:A21", col_names = F)[[1]]
+colnames(ct) <- c.tree.list
+
+c.shrub.list <- read_excel("raw data/Forest_data.xlsx", sheet = 5, range = "A2:A42", col_names = F)[[1]]
+colnames(cs) <- c.shrub.list
+
+c.herb.list <- read_excel("raw data/Forest_data.xlsx", sheet = 6, range = "A2:A194", col_names = F)[[1]]
+colnames(ch) <- c.herb.list
+
+# joined species list for trees and shrubs
+c.ts.list <- unique(c(c.tree.list, c.shrub.list))
+
+# merging tree and shrub data
+cts <- matrix(0, nrow = 96, ncol = length(c.ts.list))
+
+for (ii in 1:length(c.ts.list))
+{
+  if (c.ts.list[ii] %in% colnames(ct))
+  {
+    cts[ , ii] <- cts[ , ii] + ct[, c.ts.list[ii]]
+  }
+  if (c.ts.list[ii] %in% colnames(cs))
+  {
+    cts[ , ii] <- cts[ , ii] + cs[, c.ts.list[ii]]
+  }
+}
+
+colnames(cts) <- c.ts.list
+
+cts <- cts[, colSums(cts) > 0]
+
+cts <- data.frame(cts)
+ch <- data.frame(ch)
+
+rm(ct, cs, c.herb.list, c.tree.list, c.shrub.list, c.ts.list)
+
 #---#
+
+cb <- read_excel("raw data/dls_ele_beetles.xlsx", sheet = 1, range = "B1:U97", col_names = T)
+  
+cb[is.na(cb)] <- 0
+
+sum(colSums(cb) > 0)
+
+cb <- cb[, colSums(cb) > 0]
+
+#---#
+
+rm(ii)
+
+save.image("clean data/int.sc.2018.rda")
