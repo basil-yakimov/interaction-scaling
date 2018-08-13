@@ -50,6 +50,17 @@ rb[is.na(rb)] <- 0
 
 # load taxon list
 r.beetle.list <- read_excel("raw data/Материал_ловушки_2.xlsx", sheet = 1, range = "B8:B59", col_names = F)[[1]]
+
+# remove genus equivalents
+r.beetle.list <- sub('\\(.*?\\)', "", r.beetle.list)
+
+# remove authors and years
+r.beetle.list <- sub("^(\\S*\\s+\\S+).*", "\\1", r.beetle.list)
+
+# remove extra spaces
+r.beetle.list <- sub("  ", " ", r.beetle.list)
+
+# attribute latin names
 colnames(rb) <- r.beetle.list
 
 # remove composite taxons
@@ -69,12 +80,23 @@ ch <- t(read_excel("raw data/Forest_data.xlsx", sheet = 6, range = "B2:CS194", c
 
 # loading and assigning latin to columns
 c.tree.list <- read_excel("raw data/Forest_data.xlsx", sheet = 4, range = "A2:A21", col_names = F)[[1]]
-colnames(ct) <- c.tree.list
-
 c.shrub.list <- read_excel("raw data/Forest_data.xlsx", sheet = 5, range = "A2:A42", col_names = F)[[1]]
-colnames(cs) <- c.shrub.list
-
 c.herb.list <- read_excel("raw data/Forest_data.xlsx", sheet = 6, range = "A2:A194", col_names = F)[[1]]
+
+# remove authors and years
+c.tree.list <- sub("^(\\S*\\s+\\S+).*", "\\1", c.tree.list)
+c.shrub.list <- sub("^(\\S*\\s+\\S+).*", "\\1", c.shrub.list)
+c.herb.list <- sub("^(\\S*\\s+\\S+).*", "\\1", c.herb.list)
+
+# manual update
+c.herb.list[40] <- "Bupleurum chinense_f._pekinense"
+c.herb.list[54:58] <- paste0("Compositae Sp", 1:5)
+c.herb.list[82:87] <- paste0("Gramineae Sp", 1:6)
+c.herb.list[179] <- "Thalictrum hypoleucum"
+
+
+colnames(ct) <- c.tree.list
+colnames(cs) <- c.shrub.list
 colnames(ch) <- c.herb.list
 
 # joined species list for trees and shrubs
