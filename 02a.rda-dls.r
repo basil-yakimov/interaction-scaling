@@ -15,7 +15,7 @@ cts.rda <- rda(cb ~ ., cts)
 RsquareAdj(cts.rda)$adj.r.squared
 
 sf <- ordistep(rda(cb ~ 1, data = cts), scope = formula(cts.rda), 
-               direction = "forward", pstep = 5000, trace = 0)
+               direction = "forward", permutations = 5000, trace = F)
 
 cts.pars <- cts[, attr(sf$terminfo$terms, "term.labels")]
 
@@ -33,7 +33,7 @@ ch.rda <- rda(cb ~ ., ch)
 RsquareAdj(ch.rda)$adj.r.squared
 
 sf <- ordistep(rda(cb ~ 1, data = ch), scope = formula(ch.rda), 
-               direction = "forward", pstep = 1000, trace = 0)
+               direction = "forward", permutations = 5000, trace = 0)
 
 ch.pars <- ch[, attr(sf$terminfo$terms, "term.labels")]
 
@@ -67,8 +67,8 @@ pcnm.rda <- rda(cb ~ ., data = pcnm)
 
 RsquareAdj(pcnm.rda)$adj.r.squared
 
-sf <- ordiR2step(rda(cb ~ 1, data = pcnm), scope = formula(pcnm.rda), 
-                 direction = "forward", pstep = 1000, trace = 0)
+sf <- ordistep(rda(cb ~ 1, data = pcnm), scope = formula(pcnm.rda), 
+                 direction = "forward", permutations = 5000, trace = 0)
 
 pcnm.pars <- pcnm[,attr(sf$terminfo$terms, "term.labels")]
 
