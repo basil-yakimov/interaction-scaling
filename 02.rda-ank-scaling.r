@@ -5,7 +5,24 @@ source("R/interaction.rda.r")
 
 #------------------------------------------#
 
+ts <- rts
+h <- rh
+b <- rb[, 1:22]
 
+res.r <- vector("list", 5)
+
+res.r[[1]] <- interaction.rda(ts, h, b, 5000)
+
+for (ii in 2:5)
+{
+  b <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rb[x:(x+ii-1), 1:22]))))
+  h <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rh[x:(x+ii-1),]))))
+  ts <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rts[x:(x+ii-1),]))))
+  
+  res.r[[ii]] <- interaction.rda(ts, h, b, 5000)
+}
+
+#-----#
 
 ts <- cts
 h <- ch
@@ -26,28 +43,9 @@ for (ii in 2:5)
 
 #-----#
 
-ts <- rts
-h <- rh
-b <- rb[, 1:22]
-
-res.r <- vector("list", 5)
-
-res.r[[1]] <- interaction.rda(ts, h, b, 5000)
-
-for (ii in 2:5)
-{
-  b <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rb[x:(x+ii-1), 1:22]))))
-  h <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rh[x:(x+ii-1),]))))
-  ts <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rts[x:(x+ii-1),]))))
-
-  res.r[[ii]] <- interaction.rda(ts, h, b, 5000)
-}
-
-#-----#
-
 save(res.r, res.c, file = "clean data/rda.scaling.rda")
 
-
+#-----#
 
 
 op <- par(mfcol = c(2,5), mar = c(4, 0.5, 2, 0.5))
@@ -93,16 +91,27 @@ barplot(c.h.r, col = c("darkgreen", "limegreen"), ylim = c(0, 0.31))
 par(op)
 
 
+# a <- res.r[[1]]$ts.rda.pars
+# str(a)
+# a$call
+# paste(names(a$terminfo$ordered), collapse = ", ")
 
+terms <- matrix("", nrow = 5, ncol = 2*3)
+termsnum <- matrix(0, nrow = 5, ncol = 2*3)
 
-RsquareAdj(res[[4]]$h.rda.pars)$adj.r.squared
-anova(res[[5]]$h.result, permutations = 1000)
-anova(res[[5]]$ts.result, permutations = 1000)
-plot(res[[4]]$part, digits = 5, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
-
-
-
-res.r[[4]]$part$part$indfract
-
-showvarparts((3))
-
+for (ii in 1:5)
+{
+  terms[ii, 1] <- paste(names(res.r[[ii]]$ts.rda.pars$terminfo$ordered), collapse = ", ")
+  terms[ii, 2] <- paste(names(res.r[[ii]]$h.rda.pars$terminfo$ordered), collapse = ", ")
+  terms[ii, 3] <- paste(names(res.r[[ii]]$pcnm.rda.pars$terminfo$ordered), collapse = ", ")
+  terms[ii, 4] <- paste(names(res.c[[ii]]$ts.rda.pars$terminfo$ordered), collapse = ", ")
+  terms[ii, 5] <- paste(names(res.c[[ii]]$h.rda.pars$terminfo$ordered), collapse = ", ")
+  terms[ii, 6] <- paste(names(res.c[[ii]]$pcnm.rda.pars$terminfo$ordered), collapse = ", ")
+  
+  termsnum[ii, 1] <- length(res.r[[ii]]$ts.rda.pars$terminfo$ordered)
+  termsnum[ii, 2] <- length(res.r[[ii]]$h.rda.pars$terminfo$ordered)
+  termsnum[ii, 3] <- length(res.r[[ii]]$pcnm.rda.pars$terminfo$ordered)
+  termsnum[ii, 4] <- length(res.c[[ii]]$ts.rda.pars$terminfo$ordered)
+  termsnum[ii, 5] <- length(res.c[[ii]]$h.rda.pars$terminfo$ordered)
+  termsnum[ii, 6] <- length(res.c[[ii]]$pcnm.rda.pars$terminfo$ordered)
+}
