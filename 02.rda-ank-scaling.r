@@ -2,11 +2,12 @@ library(vegan)
 
 load("clean data/int.sc.2018.rda")
 source("R/interaction.rda.r")
-
+source("R/plot.final.rda.r")
 #------------------------------------------#
 
 ts <- rts
-h <- rh
+int <- names(rh) %in% names(rts)
+h <- rh[, !int]
 b <- rb[, 1:22]
 
 res.r <- vector("list", 5)
@@ -15,8 +16,9 @@ res.r[[1]] <- interaction.rda(ts, h, b, 5000)
 
 for (ii in 2:5)
 {
+  print(ii)
   b <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rb[x:(x+ii-1), 1:22]))))
-  h <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rh[x:(x+ii-1),]))))
+  h <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rh[x:(x+ii-1), !int]))))
   ts <- data.frame(t(sapply(seq(1,ii*(100 %/% ii), by = ii), function(x) colSums(rts[x:(x+ii-1),]))))
   
   res.r[[ii]] <- interaction.rda(ts, h, b, 5000)
@@ -34,6 +36,7 @@ res.c[[1]] <- interaction.rda(ts, h, b, 5000)
 
 for (ii in 2:5)
 {
+  print(ii)
   b <- data.frame(t(sapply(seq(1,ii*(96 %/% ii), by = ii), function(x) colSums(cb[x:(x+ii-1),]))))
   h <- data.frame(t(sapply(seq(1,ii*(96 %/% ii), by = ii), function(x) colSums(ch[x:(x+ii-1),]))))
   ts <- data.frame(t(sapply(seq(1,ii*(96 %/% ii), by = ii), function(x) colSums(cts[x:(x+ii-1),]))))
@@ -91,7 +94,7 @@ barplot(c.h.r, col = c("darkgreen", "limegreen"), ylim = c(0, 0.31))
 par(op)
 
 
-# a <- res.r[[1]]$ts.rda.pars
+# a <- res.r[[1]]$part
 # str(a)
 # a$call
 # paste(names(a$terminfo$ordered), collapse = ", ")
@@ -115,3 +118,18 @@ for (ii in 1:5)
   termsnum[ii, 5] <- length(res.c[[ii]]$h.rda.pars$terminfo$ordered)
   termsnum[ii, 6] <- length(res.c[[ii]]$pcnm.rda.pars$terminfo$ordered)
 }
+
+
+
+op <- par(mfcol = c(2,4), mar = c(4, 0.5, 2, 0.5))
+
+for (ii in 1:4)
+{
+  plot.final.rda(res.r[[ii]])
+  title(main = paste0("scale = ", ii))
+  plot.final.rda(res.c[[ii]])
+}
+
+par(op)
+
+

@@ -74,7 +74,17 @@ interaction.rda <- function(ts, h, b, nperm = 1000)
   
   #------------------------------------------#
   
+  int <- names(h.pars) %in% names(ts.pars)
+  if (sum(int) > 0)
+  {
+    names(h.pars)[int] <- paste0(names(h.pars)[int], ".h")
+  }
+  
   # Final analysis. Variance partition
+  
+  full.pars <- cbind(ts.pars, h.pars, pcnm.pars)
+  
+  full.rda.pars <- rda(b ~ ., full.pars)
   
   part <- varpart(b, ts.pars, h.pars, pcnm.pars)
   
@@ -94,7 +104,7 @@ interaction.rda <- function(ts, h, b, nperm = 1000)
   
   return(list(
     ts.rda.pars = ts.rda.pars, h.rda.pars = h.rda.pars, pcnm.rda.pars = pcnm.rda.pars, 
-    part = part, 
+    full.rda.pars = full.rda.pars, part = part, 
     ts.result = ts.result, h.result = h.result, pcnm.result = pcnm.result 
   ))
 }
