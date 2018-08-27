@@ -1,4 +1,3 @@
-
 # loading plain forest data matrices
 
 library(readxl)
@@ -135,6 +134,12 @@ cb[is.na(cb)] <- 0
 sum(colSums(cb) > 0)
 
 cb <- cb[, colSums(cb) > 0]
+
+#---#
+
+colnames(cb)[1] <- "Pterostichus sp1"
+colnames(cb)[11] <- "Panagaeus sp1"
+colnames(cb) <- sub(" ", ".", colnames(cb))
 
 #---#
 
