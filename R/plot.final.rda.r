@@ -5,16 +5,22 @@ plot.final.rda <- function(a)
     length(a$h.rda.pars$terminfo$ordered),
     length(a$pcnm.rda.pars$terminfo$ordered)))
   
-  
-  plot(a$full.rda.pars, scaling = 1, display = c("species", "sites"), type = "none")
   sc.sp <- scores(a$full.rda.pars, scaling = 1, choices = 1:2, display = "sp")
-  arrows(0, 0, sc.sp[, 1], sc.sp[, 2], col = "grey", length = 0)
   sc.fac <- scores(a$full.rda.pars, scaling = 1, choices = 1:2, display = "bp")
   sc.fac <- sc.fac * ordiArrowMul(sc.fac)
-  arrows(0, 0, sc.fac[, 1], sc.fac[, 2], col = col, length = 0, lwd = 2)
-  lab <- ordiArrowTextXY(sc.fac, rescale = FALSE, labels = rownames(sc.fac))
-  text(sc.fac*1.1, labels = lab.convert(rownames(sc.fac)), col = col)
   
+  xlim <- range(sc.sp[, 1] * 1.2, sc.fac[, 1] * 1.2)
+  ylim <- range(sc.sp[, 2] * 1.2, sc.fac[, 2] * 1.2)
+  
+  plot(a$full.rda.pars, scaling = 1, display = c("species", "sites"), type = "none",
+       xlim = xlim, ylim = ylim)
+  
+  lab <- ordiArrowTextXY(sc.fac, rescale = FALSE, labels = rownames(sc.fac))
+  
+  arrows(0, 0, sc.sp[, 1], sc.sp[, 2], col = "black", length = 0)
+  text(sc.sp*1.1, labels = lab.convert(rownames(sc.sp)))
+  arrows(0, 0, sc.fac[, 1], sc.fac[, 2], col = col, length = 0, lwd = 2)
+  text(sc.fac*1.1, labels = lab.convert(rownames(sc.fac)), col = col)
 }
 
 

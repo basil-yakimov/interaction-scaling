@@ -4,8 +4,9 @@ source("R/custom.plot.cdp.r")
 
 load("clean data/int.sc.2018.rda")
 
+int <- names(rh) %in% names(rts)
 ts <- decostand(rts, method = "hellinger")
-h <- decostand(rh, method = "hellinger")
+h <- decostand(rh[, !int], method = "hellinger")
 b <- decostand(rb[, 1:22], method = "hellinger")
 
 ts <- as.matrix(ts)
@@ -25,7 +26,7 @@ mca.ts <- MCA(Y = b, X = ts, emobj = map)
 mca.ts.partest <- test.cdp(mca.ts)
 summary(mca.ts.partest)
 
-png("figs/Fig4a.png", width = 800, height = 300)
+png("figs/Fig6a.png", width = 800, height = 300)
 par(mar = c(2,10,.5,3.5), cex = 1.5)
 plot.cdp(mca.ts.partest, las = 2, col = rev(terrain.colors(256)))
 dev.off()
@@ -63,8 +64,8 @@ summary(mca.h.partest)
 
 ind <- colSums(h > 0) > 14
 
-png("figs/Fig4b.png", width = 800, height = 450)
-par(mar = c(2,12,.5,3.5), cex = 1.5)
+png("figs/Fig6b.png", width = 800, height = 350)
+par(mar = c(2,10,.5,3.5), cex = 1.5)
 plot.cdp(mca.h.partest, las = 2, col = rev(terrain.colors(256)), ind = ind)
 dev.off()
 
@@ -116,8 +117,8 @@ mca <- MCA(Y = b, X = expl, emobj = map)
 mca.partest <- test.cdp(mca)
 summary(mca.partest)
 
-png("figs/Fig4c.png", width = 800, height = 300)
-par(mar = c(2,12,.5,3.5), cex = 1.5)
+png("figs/Fig6c.png", width = 800, height = 300)
+par(mar = c(2,10,.5,3.5), cex = 1.5)
 plot.cdp(mca.partest, las = 2, col = rev(terrain.colors(256)))
 dev.off()
 

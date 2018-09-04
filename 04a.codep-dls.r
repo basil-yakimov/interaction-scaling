@@ -27,8 +27,8 @@ summary(mca.ts.partest)
 
 ind <- colSums(ts > 0) > 9
 
-png("figs/Fig5a.png", width = 800, height = 350)
-par(mar = c(2,11.5,.5,3.5), cex = 1.5)
+png("figs/Fig7a.png", width = 800, height = 350)
+par(mar = c(2,14,.5,3.5), cex = 1.5)
 plot.cdp(mca.ts.partest, las = 2, col = rev(terrain.colors(256)), ind = ind)
 dev.off()
 
@@ -65,8 +65,8 @@ summary(mca.h.partest)
 
 ind <- colSums(h > 0) > 25
 
-png("figs/Fig5b.png", width = 800, height = 450)
-par(mar = c(2,18,.5,3.5), cex = 1.5)
+png("figs/Fig7b.png", width = 800, height = 450)
+par(mar = c(2,14,.5,3.5), cex = 1.5)
 plot.cdp(mca.h.partest, las = 2, col = rev(terrain.colors(256)), ind = ind)
 dev.off()
 
@@ -118,8 +118,8 @@ mca <- MCA(Y = b, X = expl, emobj = map)
 mca.partest <- test.cdp(mca)
 summary(mca.partest)
 
-png("figs/Fig5c.png", width = 800, height = 600)
-par(mar = c(2,10,.5,3.5), cex = 1.5)
+png("figs/Fig7c.png", width = 800, height = 500)
+par(mar = c(2,14,.5,3.5), cex = 1.5)
 plot.cdp(mca.partest, las = 2, col = rev(terrain.colors(256)))
 dev.off()
 

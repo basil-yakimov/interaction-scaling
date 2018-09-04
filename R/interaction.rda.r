@@ -1,5 +1,7 @@
 interaction.rda <- function(ts, h, b, nperm = 1000)
 {
+  #require(caret)
+  
   if (nrow(h) != nrow(ts) | nrow(h) != nrow(b))
   {
     error("input data should have the same number od rows")
@@ -74,17 +76,63 @@ interaction.rda <- function(ts, h, b, nperm = 1000)
   
   #------------------------------------------#
   
-  int <- names(h.pars) %in% names(ts.pars)
-  if (sum(int) > 0)
-  {
-    names(h.pars)[int] <- paste0(names(h.pars)[int], ".h")
-  }
+  # int <- names(h.pars) %in% names(ts.pars)
+  # if (sum(int) > 0)
+  # {
+  #   names(h.pars)[int] <- paste0(names(h.pars)[int], ".h")
+  # }
   
   # Final analysis. Variance partition
+  
+  n <- c(ncol(ts.pars), ncol(h.pars), ncol(pcnm.pars))
+  
+  while (sum(n)+1 >= nrow(b))
+  {
+    print(paste0("nrow = ", nrow(b), "; nts = ", n[1], ", n h = ", n[2], ", n pcnm = ", n[3]))
+    if (n[2] >= n[3])
+    {
+      h.pars <- h.pars[, -n[2]]
+      n[2] <- n[2] - 1
+    } else
+    {
+      pcnm.pars <- pcnm.pars[, -n[3]]
+      n[3] <- n[3] - 1
+    }
+  }
+  
+  full.pars <- cbind(ts.pars, h.pars, pcnm.pars)
+  
+  # comboInfo <- findLinearCombos(full.pars)
+  # 
+  # if (!is.null(comboInfo$remove))
+  # {
+  #   ind1 <- comboInfo$remove <= n[1]
+  #   if (sum(ind1) > 0)
+  #   {
+  #     out1 <- comboInfo$remove[ind1]
+  #     ts.pars <- ts.pars[, -out1]
+  #   }
+  #   ind2 <- comboInfo$remove > n[1] & comboInfo$remove <= n[2]
+  #   if (sum(ind2) > 0)
+  #   {
+  #     out2 <- comboInfo$remove[ind2]
+  #     h.pars <- h.pars[, -(out2-n[1])]
+  #   }
+  #   ind3 <- comboInfo$remove > n[2]
+  #   if (sum(ind3) > 0)
+  #   {
+  #     out3 <- comboInfo$remove[ind3]
+  #     pcnm.pars <- pcnm.pars[, -(out3-n[2]-n[1])]
+  #   }
+  # }
   
   full.pars <- cbind(ts.pars, h.pars, pcnm.pars)
   
   full.rda.pars <- rda(b ~ ., full.pars)
+  
+  # sf <- ordistep(rda(b ~ 1, data = full.pars), scope = formula(full.rda.pars), 
+  #                direction = "forward", trace = F, permutations = nperm)
+  
   
   part <- varpart(b, ts.pars, h.pars, pcnm.pars)
   
