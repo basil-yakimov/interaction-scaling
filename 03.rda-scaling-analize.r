@@ -5,14 +5,16 @@ source("R/plot.final.rda.r")
 
 #------------------------------------------#
 
-png("figs/Fig3.png", width = 2400, height = 1200)
-par(mfcol = c(2, 4), c(4, 0.5, 2, 0.5), cex = 1)
+png("figs/Fig3.png", width = 1200, height = 2400)
+par(mfrow = c(4, 2), c(4, 0.5, 2, 0.5), cex = 1)
 
 for (ii in 1:4)
 {
   plot(res.r[[ii]]$part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
-  title(main = paste0("scale = ", ii))
+  mtext(paste0("scale = ", ii), side = 2, line = 2)
+  if (ii == 1) title(main = "Plain forest")
   plot(res.c[[ii]]$part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
+  if (ii == 1) title(main = "Mountain forest")
 }
 
 dev.off()
