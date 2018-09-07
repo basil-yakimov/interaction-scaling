@@ -5,13 +5,13 @@ source("R/plot.final.rda.r")
 
 #------------------------------------------#
 
-png("figs/Fig3.png", width = 1200, height = 2400)
-par(mfrow = c(4, 2), c(4, 0.5, 2, 0.5), cex = 1)
+png("figs/Fig3.png", width = 800, height = 1600)
+par(mfrow = c(4, 2), mar = c(0.5, 2, 1.5, 0.5), cex = 1.15)
 
 for (ii in 1:4)
 {
   plot(res.r[[ii]]$part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
-  mtext(paste0("scale = ", ii), side = 2, line = 2)
+  mtext(paste0("scale = ", ii), side = 2, line = 1, cex = 1.15)
   if (ii == 1) title(main = "Plain forest")
   plot(res.c[[ii]]$part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
   if (ii == 1) title(main = "Mountain forest")
@@ -57,18 +57,20 @@ c.pcnm.r2[c.pcnm.r2 < 0] <- 0
 
 
 png("figs/Fig4.png", width = 1800, height = 1200)
-par(mfrow = c(2, 3), c(4, 0.5, 2, 0.5), cex = 1)
+par(mfrow = c(2, 3), mar = c(5, 4, 2, 0.1), cex = 1)
 
-barplot(r.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.17), main = "wood")
-barplot(r.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.17), main = "herb")
-barplot(r.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), main = "pcnm")
+barplot(r.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.17), main = "wood", sub = "(a)")
+mtext("Plain forest", side = 2, line = 2.5, cex = 1.5)
+barplot(r.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.17), main = "herb", sub = "(b)")
+barplot(r.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), main = "MEM", sub = "(c)")
 
-barplot(c.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.31))
-legend("topleft", legend = rev(c("ts * pcnm", "ts")), fill = rev(c("darkred", "tomato")), bty = "n", cex = 2)
-barplot(c.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.31))
-legend("topleft", legend = rev(c("h * pcnm", "h")), fill = rev(c("darkgreen", "limegreen")), bty = "n", cex = 2)
-barplot(c.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"))
-legend("topleft", legend = rev(c("pcnm", "pcnm * ts", "pcnm * ts * h", "pcnm * h")), 
+barplot(c.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.31), sub = "(d)")
+mtext("Mountain forest", side = 2, line = 2.5, cex = 1.5)
+legend("topleft", legend = rev(c("wood * MEM", "wood")), fill = rev(c("darkred", "tomato")), bty = "n", cex = 2)
+barplot(c.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.31), sub = "(e)")
+legend("topleft", legend = rev(c("herb * MEM", "herb")), fill = rev(c("darkgreen", "limegreen")), bty = "n", cex = 2)
+barplot(c.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), sub = "(f)")
+legend("topleft", legend = rev(c("MEM", "MEM * wood", "MEM * wood * herb", "MEM * herb")), 
        fill = rev(c("grey", "tomato", "wheat", "limegreen")), bty = "n", cex = 2)
 
 dev.off()
