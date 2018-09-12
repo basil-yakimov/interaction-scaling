@@ -56,24 +56,81 @@ c.h.r2[c.h.r2 < 0] <- 0
 c.pcnm.r2[c.pcnm.r2 < 0] <- 0
 
 
-png("figs/Fig4.png", width = 1800, height = 1200)
-par(mfrow = c(2, 3), mar = c(5, 4, 2, 0.1), cex = 1)
+png("figs/Fig4a.png", width = 600, height = 600)
+par(mar = c(4, 4.5, .6, .5), cex = 2)
 
-barplot(r.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.17), main = "wood", sub = "(a)")
-mtext("Plain forest", side = 2, line = 2.5, cex = 1.5)
-barplot(r.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.17), main = "herb", sub = "(b)")
-barplot(r.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), main = "MEM", sub = "(c)")
-
-barplot(c.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.31), sub = "(d)")
-mtext("Mountain forest", side = 2, line = 2.5, cex = 1.5)
-legend("topleft", legend = rev(c("wood * MEM", "wood")), fill = rev(c("darkred", "tomato")), bty = "n", cex = 2)
-barplot(c.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.31), sub = "(e)")
-legend("topleft", legend = rev(c("herb * MEM", "herb")), fill = rev(c("darkgreen", "limegreen")), bty = "n", cex = 2)
-barplot(c.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), sub = "(f)")
-legend("topleft", legend = rev(c("MEM", "MEM * wood", "MEM * wood * herb", "MEM * herb")), 
-       fill = rev(c("grey", "tomato", "wheat", "limegreen")), bty = "n", cex = 2)
+barplot(r.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), ylim = c(0, 0.6), 
+        ylab = expression(r[adj]^2 * " (MEM)"), xlab = "scale", names.arg = 1:4)
 
 dev.off()
+
+png("figs/Fig4b.png", width = 600, height = 600)
+par(mar = c(4, 4.5, .6, .5), cex = 2)
+
+barplot(c.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), ylim = c(0, 0.6), 
+        ylab = expression(r[adj]^2 * " (MEM)"), xlab = "scale", names.arg = 1:4)
+legend("topleft", legend = rev(c("MEM", "MEM * wood", "MEM * wood * herb", "MEM * herb")), 
+       fill = rev(c("grey", "tomato", "wheat", "limegreen")), bty = "n")
+
+dev.off()
+
+png("figs/Fig5a.png", width = 600, height = 600)
+par(mar = c(4, 4.5, .6, .5), cex = 2)
+
+barplot(r.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.17), 
+        ylab = expression(r[adj]^2 * " (wood)"), xlab = "scale", names.arg = 1:4)
+legend("topleft", legend = rev(c("wood * MEM", "wood")), 
+       fill = rev(c("darkred", "tomato")), bty = "n")
+
+dev.off()
+
+png("figs/Fig5b.png", width = 600, height = 600)
+par(mar = c(4, 4.5, .6, .5), cex = 2)
+
+barplot(r.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.17),
+        ylab = expression(r[adj]^2 * " (herb)"), xlab = "scale", names.arg = 1:4)
+legend("topleft", legend = rev(c("herb * MEM", "herb")), 
+       fill = rev(c("darkgreen", "limegreen")), bty = "n")
+
+dev.off()
+
+png("figs/Fig5c.png", width = 600, height = 600)
+par(mar = c(4, 4.5, .6, .5), cex = 2)
+
+barplot(c.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.31), 
+        ylab = expression(r[adj]^2 * " (wood)"), xlab = "scale", names.arg = 1:4)
+
+dev.off()
+
+
+png("figs/Fig5d.png", width = 600, height = 600)
+par(mar = c(4, 4.5, .6, .5), cex = 2)
+
+barplot(c.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.31),
+        ylab = expression(r[adj]^2 * " (herb)"), xlab = "scale", names.arg = 1:4)
+
+dev.off()
+
+
+
+# png("figs/Fig4.png", width = 1800, height = 1200)
+# par(mfrow = c(2, 3), mar = c(5, 4, 2, 0.1), cex = 1)
+# 
+# barplot(r.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.17), main = "wood", sub = "(a)")
+# mtext("Plain forest", side = 2, line = 2.5, cex = 1.5)
+# barplot(r.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.17), main = "herb", sub = "(b)")
+# barplot(r.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), main = "MEM", sub = "(c)")
+# 
+# barplot(c.ts.r2, col = c("darkred", "tomato"), ylim = c(0, 0.31), sub = "(d)")
+# mtext("Mountain forest", side = 2, line = 2.5, cex = 1.5)
+# legend("topleft", legend = rev(c("wood * MEM", "wood")), fill = rev(c("darkred", "tomato")), bty = "n", cex = 2)
+# barplot(c.h.r2, col = c("darkgreen", "limegreen"), ylim = c(0, 0.31), sub = "(e)")
+# legend("topleft", legend = rev(c("herb * MEM", "herb")), fill = rev(c("darkgreen", "limegreen")), bty = "n", cex = 2)
+# barplot(c.pcnm.r2, col = c("grey", "tomato", "wheat", "limegreen"), sub = "(f)")
+# legend("topleft", legend = rev(c("MEM", "MEM * wood", "MEM * wood * herb", "MEM * herb")), 
+#        fill = rev(c("grey", "tomato", "wheat", "limegreen")), bty = "n", cex = 2)
+# 
+# dev.off()
 
 #---#
 
