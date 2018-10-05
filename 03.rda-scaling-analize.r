@@ -19,6 +19,21 @@ for (ii in 1:4)
 
 dev.off()
 
+png("figs/Fig3a.png", width = 600, height = 600)
+par(mar = c(.5, .5, .5, .5), cex = 2)
+
+plot(res.r[[1]]$part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
+
+dev.off()
+
+png("figs/Fig3b.png", width = 600, height = 600)
+par(mar = c(.5, .5, .5, .5), cex = 2)
+
+plot(res.c[[1]]$part, digits = 2, bg = 2:4, Xnames = c("wood", "herb", "MEM"))
+
+dev.off()
+
+
 
 r.h.r2 <- c.h.r2 <- r.ts.r2 <- c.ts.r2 <- matrix(0, nrow = 2, ncol = 4)
 r.pcnm.r2 <- c.pcnm.r2 <- matrix(0, nrow = 4, ncol = 4)
