@@ -179,10 +179,13 @@ coia.ts <- coinertia(dudi.b, dudi.ts, scan = F, nf = 2)
 test.h <- randtest(coia.h, nrepet = 999)
 test.ts <- randtest(coia.ts, nrepet = 999)
 
-png("figs/Fig1a.png", width = 1200, height = 600)
+png("figs/CFig3.png", width = 1200, height = 600)
 par(mar = c(4,4,.5,.5), mfrow = c(1,2), cex = 2)
-plot(test.h, main = "", xlab = "RV")
-plot(test.ts, main = "", xlab = "RV")
+plot(test.h$plot$hist, xlim = test.h$plot$xlim, col = "limegreen", main = "", xlab = "RV", ylab = "Частота")
+arrows(x0 = test.h$obs, y0 = max(test.h$plot$hist$counts), y1 = 10, angle = 25, lwd = 2)
+
+plot(test.ts$plot$hist, xlim = test.ts$plot$xlim, col = "tomato", main = "", xlab = "RV", ylab = "Частота")
+arrows(x0 = test.ts$obs, y0 = max(test.ts$plot$hist$counts), y1 = 10, angle = 25, lwd = 2)
 dev.off()
 
 rv <- c(test.h$obs, test.ts$obs)
@@ -221,18 +224,18 @@ for (ii in 2:20)
 }
 
 
-png("figs/Fig2a.png", width = 600, height = 600)
+png("figs/CFig4.png", width = 1200, height = 600)
 par(mar = c(4,4,.5,.5), cex = 2)
 
-plot(rv[,1], ylim = c(0,1), type = "o", pch = 21, bg = "white", xlab = "scale", ylab = "RV")
-lines(rv[,2], type = "o", pch = 21, bg = "white")
+plot(rv[,1], ylim = c(0,1), type = "o", pch = 21, bg = "white", xlab = "масштаб", ylab = "RV", col = "darkgreen")
+lines(rv[,2], type = "o", pch = 21, bg = "white", col = "darkred")
 
 sig <- p[, 1] < 0.05
 points((1:20)[sig], rv[sig, 1],pch = 21, bg = "limegreen")
 sig <- p[, 2] < 0.05
 points((1:20)[sig], rv[sig, 2],pch = 21, bg = "tomato")
 
-legend("bottomright", legend = c("herb", "wood", "ns"), 
-       pch = 21, lwd = 1, pt.bg = c("limegreen", "tomato", "white"))
+legend("bottomright", legend = c("травянистый ярус", "древесно-кустарниковый ярус", "не значимо"), 
+       pch = 21, lwd = 1, pt.bg = c("limegreen", "tomato", "white"), col = c("darkgreen", "darkred", "black"))
 
 dev.off()
