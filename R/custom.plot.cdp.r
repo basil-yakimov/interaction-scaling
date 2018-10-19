@@ -4,10 +4,11 @@
 #plot.cdp(x, las = 2)
 #plot(x, las = 2)
 
-plot.cdp <- function (x, col, numscales = 20, ind, col.signif = 2, main = "", ...) {
+plot.cdp <- function (x, col, numscales = 20, ind, col.signif = 2, main = "", scale.labels, ...) {
     if(missing(col))
         col <- grey(seq(1, 0, length.out = 256))
     if(missing(ind)) ind <- rep(T, ncol(x$data$X))
+    if(missing(scale.labels)) scale.labels <- 1L:numscales
     mar <- par()$mar
     z <- log10(x$UpYXcb$CM + 1e-04)[1:numscales, ind]
     par(mar = c(mar[1L], mar[2L], mar[3L], 0.75), fig = c(0, 0.875 - 0.025 * (mar[4L] - 2.1), 0, 1))
@@ -15,7 +16,7 @@ plot.cdp <- function (x, col, numscales = 20, ind, col.signif = 2, main = "", ..
           zlim = c(-4, 1e-04), col = col, axes = FALSE, xlab = "", ylab = "",
           main = main, ...)
     box(...)
-    axis(1, at = 1L:numscales, labels = 1:numscales, ...)
+    axis(1, at = 1L:numscales, labels = scale.labels, ...)
     axis(2, at = 1L:sum(ind), labels = sub("\\." , " ", colnames(x$data$X)[ind]), ...)
     if (!is.null(x$test$signif)) 
         rect(xleft = x$test$signif$U - 0.5, xright = x$test$signif$U + 0.5,
