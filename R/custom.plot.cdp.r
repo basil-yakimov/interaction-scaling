@@ -16,7 +16,7 @@ plot.cdp <- function (x, col, numscales = 20, ind, col.signif = 2, main = "", ..
           main = main, ...)
     box(...)
     axis(1, at = 1L:numscales, labels = 1:numscales, ...)
-    axis(2, at = 1L:sum(ind), labels = colnames(x$data$X)[ind], ...)
+    axis(2, at = 1L:sum(ind), labels = sub("\\." , " ", colnames(x$data$X)[ind]), ...)
     if (!is.null(x$test$signif)) 
         rect(xleft = x$test$signif$U - 0.5, xright = x$test$signif$U + 0.5,
              ybottom = cumsum(ind)[x$test$signif$X] - 0.5, ytop = cumsum(ind)[x$test$signif$X] + 0.5,
