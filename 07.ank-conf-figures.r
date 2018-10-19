@@ -6,11 +6,13 @@ int <- names(rh) %in% names(rts)
 rh <- rh[, !int]
 rb <- rb[, -47]
 
+rts <- rts[, order(colSums(rts))]
+rh <- rh[, order(colSums(rh))]
+rb <- rb[, order(colSums(rb))]
+
 #------------------------------------------#
 
 max(rts)
-
-rts <- rts[, order(colSums(rts))]
 
 ts.col <- rts
 ts.col[] <- "white"
@@ -41,8 +43,6 @@ dev.off()
 
 max(rh)
 
-rh <- rh[, order(colSums(rh))]
-
 h.col <- rh
 h.col[] <- "white"
 h.col[rh > 0 & rh < 25] <- "lightgreen"
@@ -72,8 +72,6 @@ dev.off()
 
 max(rb)
 
-rb <- rb[, order(colSums(rb))]
-
 b.col <- rb
 b.col[] <- "white"
 b.col[rb > 0 & rb < 25] <- "lightgreen"
@@ -100,7 +98,6 @@ dev.off()
 
 #------------------------------------------#
 
-
 png("figs/CFig2a.png", width = 900, height = 900, bg = "transparent")
 
 op <- par(mfrow = c(3, 3), mar = c(2,2,.25,.25), cex = 1.5)
@@ -111,10 +108,6 @@ for (ii in 1:3)
   {
     y <- rb[, 46-ii+1]
     x <-  rts[, 13-jj+1]
-    
-    #nz <- x > 0 & y > 0
-    #x <- x[nz]
-    #y <- y[nz]
     
     plot(y ~ x, pch = 21, bg = "steelblue", xlab = "", ylab = "", axes = F)
     if (jj == 1) axis(2)
@@ -138,10 +131,6 @@ for (ii in 1:3)
     y <- rb[, 23-ii+1]
     x <-  rts[, 8-jj+1]
     
-    #nz <- x > 0 & y > 0
-    #x <- x[nz]
-    #y <- y[nz]
-    
     plot(y ~ x, pch = 21, bg = "steelblue", xlab = "", ylab = "", axes = F)
     if (jj == 1) axis(2)
     if (ii == 3) axis(1)
@@ -151,8 +140,6 @@ for (ii in 1:3)
 }
 
 dev.off()
-
-
 
 
 
@@ -261,28 +248,16 @@ b <- as.matrix(b)
 
 map <- eigenmap(x = 1:nrow(b), weighting = Wf.binary, boundaries = c(0,1))
 
-# Co-dependence analysis of relation between beetle community and woody species
-mca.ts <- MCA(Y = b, X = ts, emobj = map)
-mca.ts.partest <- test.cdp(mca.ts)
-summary(mca.ts.partest)
+# Co-dependence analysis of relation between beetle community and separate species
+mca.tsh <- MCA(Y = b, X = cbind(ts[, 9:13], h[, c(15:19, 28:33)]), emobj = map)
+mca.tsh.partest <- test.cdp(mca.tsh)
+summary(mca.tsh.partest)
 
-png("figs/CFig5a.png", width = 800, height = 300)
-par(mar = c(2,10,.5,3.5), cex = 1.5)
-plot.cdp(mca.ts.partest, las = 2, col = rev(terrain.colors(256)))
+png("figs/CFig5a.png", width = 800, height = 400)
+par(mar = c(3,10,.5,3.5), cex = 1.5)
+plot.cdp(mca.tsh.partest, las = 2, col = rev(terrain.colors(256)), scale.labels = round(c(1000, 2*1010/(3:21))))
 dev.off()
 
-
-# Co-dependence analysis of relation between beetle community and herb species
-mca.h <- MCA(Y = b, X = h, emobj = map)
-mca.h.partest <- test.cdp(mca.h)
-summary(mca.h.partest)
-
-ind <- colSums(h > 0) > 14
-
-png("figs/CFig5b.png", width = 800, height = 350)
-par(mar = c(2,10,.5,3.5), cex = 1.5)
-plot.cdp(mca.h.partest, las = 2, col = rev(terrain.colors(256)), ind = ind)
-dev.off()
 
 # Constructing a predictor matrix of PCs from woody and herb communities
 
@@ -295,7 +270,7 @@ h.npc <- sum(h.pca$CA$eig > mean(h.pca$CA$eig))
 h.sc <- scores(h.pca, choices = 1:h.npc)$sites
 
 expl <- cbind(ts.sc, h.sc)
-colnames(expl) <- c(paste0("ts", 1:ts.npc), paste0("h", 1:h.npc))
+colnames(expl) <- c(paste0("др-к-", 1:ts.npc), paste0("трав-", 1:h.npc))
 
 #------------------------------------------#
 
@@ -304,9 +279,9 @@ mca <- MCA(Y = b, X = expl, emobj = map)
 mca.partest <- test.cdp(mca)
 summary(mca.partest)
 
-png("figs/CFig5c.png", width = 800, height = 300)
-par(mar = c(2,10,.5,3.5), cex = 1.5)
-plot.cdp(mca.partest, las = 2, col = rev(terrain.colors(256)))
+png("figs/CFig5b.png", width = 800, height = 300)
+par(mar = c(3,10,.5,3.5), cex = 1.5)
+plot.cdp(mca.partest, las = 2, col = rev(terrain.colors(256)), scale.labels = round(c(1000, 2*1010/(3:21))))
 dev.off()
 
 
