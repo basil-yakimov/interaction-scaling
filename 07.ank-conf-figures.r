@@ -16,8 +16,8 @@ max(rts)
 
 ts.col <- rts
 ts.col[] <- "white"
-ts.col[rts > 0 & rts < 15] <- "lightgreen"
-ts.col[rts >= 15 & rts < 30] <- "darkgreen"
+ts.col[rts > 0 & rts < 15] <- "tomato"
+ts.col[rts >= 15 & rts < 30] <- "darkred"
 ts.col[rts >= 30] <- "black"
 
 ab <- colSums(rts)
@@ -31,11 +31,11 @@ op <- par(mar = c(0.25, 10, 0.25, 0.25), cex = 2)
 plot(1, 1, type = "n", ylim = c(-1, 13.5), xlim = c(0, 151), axes = F, ann = F)
 for (ii in 1:13) points(1:100, rep(ii, 100), pch = 22, cex = 1, bg = ts.col[,ii])
 
-rect(xleft = 111, ybottom = (1:13) - 0.2, xright = 111 + ab, ytop = (1:13) + 0.2, col = "darkgreen")
+rect(xleft = 111, ybottom = (1:13) - 0.2, xright = 111 + ab, ytop = (1:13) + 0.2, col = "tomato")
 
 axis(side = 2, at = c(1:13), labels = sub("\\." , " ", colnames(rts)), las = 2, tick = F)
 legend("bottom", c("0", "1-15", "16-30", "> 30"), horiz = TRUE, bty = "n", pch = 22, 
-       pt.bg = c("white", "lightgreen", "darkgreen", "black"), pt.cex = 2)
+       pt.bg = c("white", "tomato", "darkred", "black"), pt.cex = 2)
 
 dev.off()
 
@@ -60,7 +60,7 @@ op <- par(mar = c(0.25, 12, 0.25, 0.25), cex = 2)
 plot(1, 1, type = "n", ylim = c(-1, 13.5), xlim = c(0, 151), axes = F, ann = F)
 for (ii in 1:13) points(1:100, rep(ii, 100), pch = 22, cex = 1, bg = h.col[,ii+20])
 
-rect(xleft = 111, ybottom = (1:13) - 0.2, xright = 111 + ab[21:33], ytop = (1:13) + 0.2, col = "darkgreen")
+rect(xleft = 111, ybottom = (1:13) - 0.2, xright = 111 + ab[21:33], ytop = (1:13) + 0.2, col = "limegreen")
 
 axis(side = 2, at = c(1:13), labels = sub("\\." , " ", colnames(rh)[21:33]), las = 2, tick = F)
 legend("bottom", c("0", "1-5", "5-10", "> 10"), horiz = TRUE, bty = "n", pch = 22, 
@@ -74,8 +74,8 @@ max(rb)
 
 b.col <- rb
 b.col[] <- "white"
-b.col[rb > 0 & rb < 25] <- "lightgreen"
-b.col[rb >= 25 & rb < 50] <- "darkgreen"
+b.col[rb > 0 & rb < 25] <- "skyblue"
+b.col[rb >= 25 & rb < 50] <- "darkblue"
 b.col[rb >= 50] <- "black"
 
 ab <- colSums(rb)
@@ -88,11 +88,11 @@ op <- par(mar = c(0.25, 14, 0.25, 0.25), cex = 2)
 plot(1, 1, type = "n", ylim = c(-1, 13.5), xlim = c(0, 151), axes = F, ann = F)
 for (ii in 1:13) points(1:100, rep(ii, 100), pch = 22, cex = 1, bg = b.col[,ii+33])
 
-rect(xleft = 111, ybottom = (1:13) - 0.2, xright = 111 + ab[34:46], ytop = (1:13) + 0.2, col = "darkgreen")
+rect(xleft = 111, ybottom = (1:13) - 0.2, xright = 111 + ab[34:46], ytop = (1:13) + 0.2, col = "steelblue")
 
 axis(side = 2, at = c(1:13), labels = sub("\\." , " ", colnames(rb)[34:46]), las = 2, tick = F)
-legend("bottom", c("0", "1-5", "5-10", "> 10"), horiz = TRUE, bty = "n", pch = 22, 
-       pt.bg = c("white", "lightgreen", "darkgreen", "black"), pt.cex = 2)
+legend("bottom", c("0", "1-25", "26-50", "> 50"), horiz = TRUE, bty = "n", pch = 22, 
+       pt.bg = c("white", "skyblue", "darkblue", "black"), pt.cex = 2)
 
 dev.off()
 
@@ -219,13 +219,13 @@ for (ii in 2:20)
 png("figs/CFig4.png", width = 1200, height = 600)
 par(mar = c(4,4,.5,.5), cex = 2)
 
-plot(rv[,1], ylim = c(0,1), type = "o", pch = 21, bg = "white", xlab = "масштаб", ylab = "RV", col = "darkgreen")
-lines(rv[,2], type = "o", pch = 21, bg = "white", col = "darkred")
+plot((1:20)*10, rv[,1], ylim = c(0,1), type = "o", pch = 21, bg = "white", xlab = "масштаб", ylab = "RV", col = "darkgreen")
+lines((1:20)*10, rv[,2], type = "o", pch = 21, bg = "white", col = "darkred")
 
 sig <- p[, 1] < 0.05
-points((1:20)[sig], rv[sig, 1],pch = 21, bg = "limegreen")
+points(((1:20)*10)[sig], rv[sig, 1],pch = 21, bg = "limegreen")
 sig <- p[, 2] < 0.05
-points((1:20)[sig], rv[sig, 2],pch = 21, bg = "tomato")
+points(((1:20)*10)[sig], rv[sig, 2],pch = 21, bg = "tomato")
 
 legend("bottomright", legend = c("травянистый ярус", "древесно-кустарниковый ярус", "не значимо"), 
        pch = 21, lwd = 1, pt.bg = c("limegreen", "tomato", "white"), col = c("darkgreen", "darkred", "black"))
