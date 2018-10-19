@@ -244,3 +244,69 @@ legend("bottomright", legend = c("травянистый ярус", "древе�
        pch = 21, lwd = 1, pt.bg = c("limegreen", "tomato", "white"), col = c("darkgreen", "darkred", "black"))
 
 dev.off()
+
+
+#------------------------------------------#
+
+library(codep)
+source("R/custom.plot.cdp.r")
+
+ts <- decostand(rts, method = "hellinger")
+h <- decostand(rh, method = "hellinger")
+b <- decostand(rb, method = "hellinger")
+
+ts <- as.matrix(ts)
+h <- as.matrix(h)
+b <- as.matrix(b)
+
+map <- eigenmap(x = 1:nrow(b), weighting = Wf.binary, boundaries = c(0,1))
+
+# Co-dependence analysis of relation between beetle community and woody species
+mca.ts <- MCA(Y = b, X = ts, emobj = map)
+mca.ts.partest <- test.cdp(mca.ts)
+summary(mca.ts.partest)
+
+png("figs/CFig5a.png", width = 800, height = 300)
+par(mar = c(2,10,.5,3.5), cex = 1.5)
+plot.cdp(mca.ts.partest, las = 2, col = rev(terrain.colors(256)))
+dev.off()
+
+
+# Co-dependence analysis of relation between beetle community and herb species
+mca.h <- MCA(Y = b, X = h, emobj = map)
+mca.h.partest <- test.cdp(mca.h)
+summary(mca.h.partest)
+
+ind <- colSums(h > 0) > 14
+
+png("figs/CFig5b.png", width = 800, height = 350)
+par(mar = c(2,10,.5,3.5), cex = 1.5)
+plot.cdp(mca.h.partest, las = 2, col = rev(terrain.colors(256)), ind = ind)
+dev.off()
+
+# Constructing a predictor matrix of PCs from woody and herb communities
+
+ts.pca <- rda(ts)
+ts.npc <- sum(ts.pca$CA$eig > mean(ts.pca$CA$eig))
+ts.sc <- scores(ts.pca, choices = 1:ts.npc)$sites
+
+h.pca <- rda(h)
+h.npc <- sum(h.pca$CA$eig > mean(h.pca$CA$eig))
+h.sc <- scores(h.pca, choices = 1:h.npc)$sites
+
+expl <- cbind(ts.sc, h.sc)
+colnames(expl) <- c(paste0("ts", 1:ts.npc), paste0("h", 1:h.npc))
+
+#------------------------------------------#
+
+# Final analysis. Multiscale co-dependence analysis between insect community and phytocoenosis
+mca <- MCA(Y = b, X = expl, emobj = map)
+mca.partest <- test.cdp(mca)
+summary(mca.partest)
+
+png("figs/CFig5c.png", width = 800, height = 300)
+par(mar = c(2,10,.5,3.5), cex = 1.5)
+plot.cdp(mca.partest, las = 2, col = rev(terrain.colors(256)))
+dev.off()
+
+
