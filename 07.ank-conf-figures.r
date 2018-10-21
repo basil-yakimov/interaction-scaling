@@ -259,6 +259,25 @@ plot.cdp(mca.tsh.partest, las = 2, col = rev(terrain.colors(256)), scale.labels 
 dev.off()
 
 
+res.tsh <- data.frame(mem = names(mca.tsh.partest$test$significant$X), 
+                     var = c(colnames(ts[, 9:13]), colnames(h[, c(15:19, 28:33)]))[mca.tsh.partest$test$significant$X],
+                     c = NA, 
+                     phi = mca.tsh.partest$test$global[1:length(mca.tsh.partest$test$significant$X),2],
+                     p = mca.tsh.partest$test$global[1:length(mca.tsh.partest$test$significant$X),6])
+coef <- mca.tsh.partest$UpYXcb$CM
+for (ii in 1:length(mca.tsh.partest$test$significant$X))
+{
+  res.tsh$c[ii] <- coef[names(mca.tsh.partest$test$significant$X)[ii], mca.tsh.partest$test$significant$X[ii]]
+}
+res.tsh$c <- round(res.tsh$c, dig = 3)
+res.tsh$phi <- round(res.tsh$phi, dig = 2)
+res.tsh$p <- round(res.tsh$p, dig = 3)
+
+# Final results table
+res.tsh
+
+#---#
+
 # Constructing a predictor matrix of PCs from woody and herb communities
 
 ts.pca <- rda(ts)
@@ -284,4 +303,38 @@ par(mar = c(3,10,.5,3.5), cex = 1.5)
 plot.cdp(mca.partest, las = 2, col = rev(terrain.colors(256)), scale.labels = round(c(1000, 2*1010/(3:21))))
 dev.off()
 
+res <- data.frame(mem = names(mca.partest$test$significant$X), 
+                  var = colnames(expl)[mca.partest$test$significant$X],
+                  c = NA, phi = mca.partest$test$global[1:length(mca.partest$test$significant$X),2],
+                  p = mca.partest$test$global[1:length(mca.partest$test$significant$X),6])
+coef <- mca.partest$UpYXcb$CM
+for (ii in 1:length(mca.partest$test$significant$X))
+  res$c[ii] <- coef[names(mca.partest$test$significant$X)[ii], mca.partest$test$significant$X[ii]]
 
+
+res$c <- round(res$c, dig = 3)
+res$phi <- round(res$phi, dig = 2)
+res$p <- round(res$p, dig = 3)
+
+# Final results table
+res
+
+
+#------------------------------------------#
+
+
+png("figs/CFig6a.png", width = 600, height = 300)
+par(mar = c(4,.5,.5,.5), cex = 1.5)
+
+plot(map$U[, 1], type = "o", pch = 19, cex = 0.5, xlab = "Площадки", ylab = "", col = "grey", axes = F)
+axis(1)
+
+dev.off()
+
+png("figs/CFig6b.png", width = 600, height = 300)
+par(mar = c(4,.5,.5,.5), cex = 1.5)
+
+plot(map$U[, 7], type = "o", pch = 19, cex = 0.5, xlab = "Площадки", ylab = "", col = "grey", axes = F)
+axis(1)
+
+dev.off()
